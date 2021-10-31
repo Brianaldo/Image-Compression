@@ -144,6 +144,17 @@ def isInV (v, x):
             i += 1
     return found
 
+def makeIdentity(n):
+# Mengembalikan matriks identitas nxn
+# Kamus Lokal
+    # m : matrix
+    # i : int
+# Algoritma
+    m = [0 for i in range (n)]
+    for i in range (n):
+        m[i][i] = 1
+    return i
+
 def sort (v):
 # Mengembalikan v yang sudah disort mengecil nilai absolutnya
 # Kamus Lokal
