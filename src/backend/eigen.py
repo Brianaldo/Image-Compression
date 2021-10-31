@@ -153,7 +153,7 @@ def makeIdentity(n):
     m = [0 for i in range (n)]
     for i in range (n):
         m[i][i] = 1
-    return i
+    return m
 
 def sort (v):
 # Mengembalikan v yang sudah disort mengecil nilai absolutnya
