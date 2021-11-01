@@ -193,10 +193,10 @@ def normalize (v):
 # Algoritma
     soq = 0
     for i in range(len(v)):
-        soq += (v[i][0])**2
+        soq += (v[i])**2
     length = math.sqrt(soq)
     for i in range(len(v)):
-        v[i][0] /= length
+        v[i] /= length
     return v
 
 
