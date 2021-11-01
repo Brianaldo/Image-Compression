@@ -262,7 +262,7 @@ def Q (m):
             mh[i] = UkurangV(mh[i], projection(ma[i], mh[j]))
     for i in range (nbar(mh)):    
         x = magnitude(mh[i])
-        if x!=0:
+        if round(x,10)!=0:
             mh[i] = vKaliX(mh[i], 1/x)
     return transpose(mh)
 
