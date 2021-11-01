@@ -171,6 +171,20 @@ def sort (v):
             v[pas] = temp
     return v
 
+# def normalize (v):
+# # Melakukan normalisasi vektor
+# # Kamus Lokal
+#     # i, soq: int
+#     # length: real
+# # Algoritma
+#     soq = 0
+#     for i in range(len(v)):
+#         soq += (v[i][0])**2
+#     length = math.sqrt(soq)
+#     for i in range(len(v)):
+#         v[i][0] /= length
+#     return v
+
 def normalize (v):
 # Melakukan normalisasi vektor
 # Kamus Lokal
@@ -184,6 +198,7 @@ def normalize (v):
     for i in range(len(v)):
         v[i][0] /= length
     return v
+
 
 def dotProduct (u,v):
 # Mengembalikan hasil perkalian dot antara u dan v
