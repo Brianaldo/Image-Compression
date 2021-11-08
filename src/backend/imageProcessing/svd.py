@@ -6,12 +6,18 @@ def svd (m, k):
    # res : matrix
    # e : array
 # ALGORITMA
+    print("nice")
     U = getU(m)
+    print("nice")
     Vt = getVt(m)
+    print("nice")
     sigma = getSigma(U, Vt, k, len(m), len(m[0]))
+    print("nice")
     # print(sigma)
     M = mulmat(U[1], sigma)
+    print("nice")
     M = mulmat(M, Vt[1])
+    print("nice")
 
     return M
 
@@ -23,6 +29,7 @@ def getU (m):
     # e : tuple of eigenVal and eigenVec
 # ALGORITMA
     e = eigen(np.dot(m, transpose(m)))
+    print("nose")
     # print(e)
     U = [e[0], []]
     for i in range (len(e[1])):

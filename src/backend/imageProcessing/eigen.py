@@ -295,8 +295,10 @@ def getEigenValues(matrix):
     retMat = np.array([])
     i = 0
     while(not np.allclose(matrix, np.triu(matrix)) and i < 3):
+        print("loop")
         Q, R = QR(matrix)
         matrix = np.dot(R, Q)
+        print("loop2")
         i += 1
     
     ada0 = False
@@ -328,6 +330,7 @@ def QR(matrix):
         else:
             col = col / magn
         Q[0:, i] = col
+    print("done")
     return (Q, R)
 
 # def QR (A):
@@ -526,7 +529,9 @@ def eigenVector (A, val):
     B = matKaliX(A, -1)
     for i in range (nbar(B)):
         B[i][i] += val
+    print("yes")
     B = gaussJordan(B)
+    print("yes2")
     
     i = 0
 
@@ -595,12 +600,17 @@ def eigen (A):
     # temp, eigvector : matrix
     # i: int
 # Algoritma
+    print("eigen")
     A = np.array(A)
     # eigVal = QR(A)
+    print("eigen1")
     eigVal = getEigenValues(A)
+    print("eigen2")
     eigVal = sorted(eigVal, reverse=True)
+    # print(eigVal)
     eigVector = []
     for i in range (len(eigVal)):
+        print("loops")
         temp = eigenVector(A, eigVal[i])
         for j in range (len(temp)):
             eigVector.append(temp[j])
