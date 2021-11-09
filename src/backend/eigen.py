@@ -307,23 +307,17 @@ def getEigenValues(matrix):
     length = len(matrix)
     retMat = np.array([])
     i = 0
-    while(not np.allclose(matrix, np.triu(matrix)) and i < 100):
+    while(not isUpperTriangular(matrix) and i < 25):
         Q, R = QR(matrix)
         matrix = np.dot(R, Q)
         i += 1
-    
-    ada0 = False
-    for i in range(length):
-        if (abs(matrix[i][i]) >= 0.00001 and not isInV(retMat, matrix[i][i])):
-            retMat = np.append(retMat, matrix[i][i])
-        elif (abs(matrix[i][i]) < 0.00001 and not ada0 and not isInV(retMat, matrix[i][i])):
-            retMat = np.append(retMat, 0)
-            ada0 = True
-    
+    for j in range(length):
+        retMat = np.append(retMat, matrix[j][j])
     return retMat
 
 def QR(matrix):
-    matrix1 = hessenberg(matrix)
+    matrix1 = matrix
+    # matrix1 = hessenberg(matrix)
     length = len(matrix1)
     Q = np.empty((length, length))
     R = np.zeros((length, length))
@@ -528,6 +522,20 @@ def isAllZero (A, bar, kol):
             i += 1
     return not(found)
 
+def getEigenVector(matrix, eigen):
+# Inverse Power Method
+    length = len(matrix)
+    v = np.arange(length)
+    np.random.shuffle(v)
+    for i in range(15):
+        vx = (matrix - np.identity(length) * eigen)
+        if (np.linalg.det(vx) == 0):
+            vx = (matrix - np.identity(length) * 0.000000001)
+        v = np.dot(np.linalg.inv(vx), v)
+        magn = np.linalg.norm(v)
+        v = v / magn
+    return v
+
 def eigenVector (A, val):
 # Mengembalikan eigen vector dari A dengan eigenvalue val
 # Kamus Lokal
@@ -598,7 +606,9 @@ def eigenVector (A, val):
 
 
 def filterZero(x):
-    if abs(x) < 0.000001:
+# Mencegah 0 dan negatif (kalau negatif pasti mendekati 0)
+# Mencegah akar negatif pada perhitungan nilai singular
+    if x < 0.000001:
         return False
     return True
 

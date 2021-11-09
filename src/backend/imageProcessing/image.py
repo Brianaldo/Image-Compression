@@ -26,29 +26,35 @@ def arrayToImg(array):
     return
 
 def coba(threeArray):
-    red = threeArray[0]
-    green = threeArray[1]
-    blue = threeArray[2]
-    length = len(red)
-    red = svd(red, length/2)
-    green = svd(green, length/2)
-    blue = svd(blue, length/2)
-    newArr = [red, green, blue]
-    return newArr
+    rank = len(np.linalg.eigvals(np.dot(threeArray[0], np.transpose(threeArray[0]))))
+    # red = threeArray[0]
+    # green = threeArray[1]
+    # blue = threeArray[2]
+    k = round(rank / 2)
+    # for i in range(3):
+    U, S, V = np.linalg.svd(threeArray[0])
+    print()
+    # red = svd(red, length/2)
+    # green = svd(green, length/2)
+    # blue = svd(blue, length/2)
+    # newArr = [red, green, blue]
+    # return newArr
 cwd = os.getcwd()
 os.chdir(os.path.join(cwd, "Algeo02-20112", "src", "backend"))
 # arrayToImg(threeArrayToOneArray(coba(imageToThreeArray(r"imageProcessing\img.jpg"))))
-x = imageToThreeArray(r"imageProcessing\img.jpg")[0]
+coba(imageToThreeArray(r"imageProcessing\img.jpg"))
+# x = imageToThreeArray(r"imageProcessing\img.jpg")[0]
 # print(np.dot(x, transpose(x)))
 # print(getEigenValues(np.array(x)))
-print(svd(x, 5))
-# print(np.array(svd([[1, 1, 1, 0, 0],
+# print(np.linalg.svd(x))
+# m = np.array([[1, 1, 1, 0, 0],
 #      [3, 3, 3, 0, 0],
 #      [4, 4, 4, 0, 0],
 #      [5, 5, 5, 0, 0],
 #      [0, 2, 0, 4, 4],
 #      [0, 0, 0, 5, 5],
-#      [0, 1, 0, 2, 2]], 3)))
+#      [0, 1, 0, 2, 2]])
+# print(np.linalg.eigvals(np.dot(m, np.transpose(m))))
 # print(svd(imageToThreeArray(r"imageProcessing\img.jpg")[0], 70))
 
 
