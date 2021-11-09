@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from scipy.linalg import hessenberg
 
 def nbar (m):
 # Mengembalikan jumlah baris matrix
@@ -268,7 +269,7 @@ def projection (u,v):
         k = dotProduct(u,v) / magnitude(v)**2
     return vKaliX(v, k)
 
-def Q (m):
+'''def Q (m):
 # Mengembalikan matrix Q sebagai faktor m berdasarkan QR factorization
 # Metode yang digunakan adalah Gram-Schmidt process
 # Kamus Lokal
@@ -283,18 +284,18 @@ def Q (m):
         x = magnitude(mh[i])
         if round(x,3)!=0:
             mh[i] = vKaliX(mh[i], 1/x)
-    return transpose(mh)
+    return transpose(mh)'''
 
-def R (m):
+'''def R (m):
 # Mengembalikan matrix R sebagai faktor m berdasarkan QR factorization
 # Algoritma
-    return mulmat(transpose(Q(m)), m)
+    return mulmat(transpose(Q(m)), m)'''
 
 def getEigenValues(matrix):
     length = len(matrix)
     retMat = np.array([])
     i = 0
-    while(not np.allclose(matrix, np.triu(matrix)) and i < 3):
+    while(not np.allclose(matrix, np.triu(matrix)) and i < 100):
         Q, R = QR(matrix)
         matrix = np.dot(R, Q)
         i += 1
@@ -310,11 +311,12 @@ def getEigenValues(matrix):
     return retMat
 
 def QR(matrix):
-    length = len(matrix)
+    matrix1 = hessenberg(matrix)
+    length = len(matrix1)
     Q = np.empty((length, length))
     R = np.zeros((length, length))
     for i in range(length):
-        col = matrix[0:, i]
+        col = matrix1[0:, i]
         # print(col)
         for j in range(1, i + 1):
             R[j - 1][i] = np.dot(col, Q[0:, j - 1])
@@ -330,26 +332,26 @@ def QR(matrix):
         Q[0:, i] = col
     return (Q, R)
 
-# def QR (A):
-# # Mengembalikan nilai eigen dari matrix m
-# # Kamus Lokal
-#     # i, j: int
-#     # eigen : array
-#     # tempA : matrix
-# # Algoritma
-#     for i in range(1000):
-#         A = mulmat(R(A),Q(A))
-#     for i in range(nbar(A)):
-#         for j in range(nkol(A)):
-#             A[i][i] = round(A[i][i], 20)
-#     length = nbar(A)
-#     eigen = []
-#     for i in range(length):
-#         tempA = copyMatrix(A)
-#         tempA[i][i] = 0
-#         if round(np.linalg.det(tempA))==0 and not(isInV(eigen, A[i][i])):
-#             eigen.append(A[i][i]) 
-#     return sort(eigen)
+'''def QR (A):
+ # Mengembalikan nilai eigen dari matrix m
+ # Kamus Lokal
+     # i, j: int
+     # eigen : array
+     # tempA : matrix
+ # Algoritma
+    for i in range(1000):
+        A = mulmat(R(A),Q(A))
+    for i in range(nbar(A)):
+        for j in range(nkol(A)):
+            A[i][i] = round(A[i][i], 20)
+    length = nbar(A)
+    eigen = []
+    for i in range(length):
+        tempA = copyMatrix(A)
+        tempA[i][i] = 0
+        if round(np.linalg.det(tempA))==0 and not(isInV(eigen, A[i][i])):
+            eigen.append(A[i][i]) 
+    return sort(eigen)'''
 
 def tukarBaris (A, baris1, baris2):
 # Menukar baris baris1 dan baris2 pada matriks A
@@ -453,7 +455,7 @@ def gauss (A):
     while (bar<=n-1):
         done = False
         while (kol<=m-1 and not(done)):
-            if (round(B[bar][kol], 3)!=0):
+            if (round(B[bar][kol],3)!=0):
                 B = kaliX(B, bar, 1/B[bar][kol])
                 done = True
             else :
@@ -462,7 +464,7 @@ def gauss (A):
 
     for i in range (0, n):
         for j in range (0, m):
-            if (round(B[i][j], 3)==0):
+            if (round(B[i][j],3)==0):
                 B[i][j] = 0
 
     return B
@@ -487,9 +489,9 @@ def gaussJordan (A):
         done = False
         tempBar = 0
         while (kol<=m-1 and not(done)):
-            if (round(B[bar][kol], 3)==1):
+            if (round(B[bar][kol],3)==1):
                 while (tempBar <= n-1):
-                    if (round(B[tempBar][kol], 3)!=0 and tempBar!=bar):
+                    if (round(B[tempBar][kol],3)!=0 and tempBar!=bar):
                         B = tambahBaris(B, tempBar, bar, (-1*B[tempBar][kol]/B[bar][kol]))
                     tempBar += 1
                 if tempBar == n:
@@ -508,7 +510,7 @@ def isAllZero (A, bar, kol):
     found = False
     i = kol + 1
     while (i<=nkol(A)-1 and not(found)):
-        if (round(A[bar][i], 3)!=0):
+        if (round(A[bar][i],3)!=0):
             found = True
         else:
             i += 1
@@ -527,7 +529,6 @@ def eigenVector (A, val):
     for i in range (nbar(B)):
         B[i][i] += val
     B = gaussJordan(B)
-    print(B)
     
     i = 0
 
@@ -608,11 +609,6 @@ def eigen (A):
         for j in range (len(temp)):
             eigVector.append(temp[j])
     return (eigVal, eigVector)
-
-m = [[3,-2,0], [-2,3,0], [0,0,5]]
-print(eigen(m))
-
-
 
 
 '''

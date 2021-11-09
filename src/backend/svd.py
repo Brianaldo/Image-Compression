@@ -1,19 +1,18 @@
 from math import sqrt
 from eigen import *
 
-def svd (m, k):
+def svd (m):
 # KAMUS LOKAL
    # res : matrix
    # e : array
 # ALGORITMA
     U = getU(m)
     Vt = getVt(m)
-    sigma = getSigma(U, Vt, k, len(m), len(m[0]))
+    sigma = getSigma(U, Vt, len(m), len(m[0]))
     # print(sigma)
-    M = mulmat(U[1], sigma)
-    M = mulmat(M, Vt[1])
-
-    return M
+    #M = mulmat(U[1], sigma)
+    #M = mulmat(M, Vt[1])
+    return (U[1], sigma, Vt[1])
 
 def getU (m):
 # Mengembalikan U
@@ -25,6 +24,10 @@ def getU (m):
     e = eigen(np.dot(m, transpose(m)))
     # print(e)
     U = [e[0], []]
+    ctr = 0
+    for i in range(len(e[0])):
+        if (round(e[0][i],3)!=0):
+            ctr += 1
     for i in range (len(e[1])):
         U[1].append(normalize(e[1][i]))
     U[1] = transpose(U[1])
@@ -44,7 +47,7 @@ def getVt(m):
     
     return Vt
 
-def getSigma(U, Vt, k, m, n):
+def getSigma(U, Vt, m, n):
 # KAMUS LOKAL
 
 # ALGORITMA
@@ -76,24 +79,23 @@ def getSigma(U, Vt, k, m, n):
 
     sigma = [[0 for j in range (n)] for i in range (m)]
 
+    k = len(eigen)
     for i in range (k):
         sigma[i][i] = eigen.pop()
 
     return sigma
 
 def main():
-    m = [[1, 1, 1, 0, 0],
+    '''m = [[1, 1, 1, 0, 0],
      [3, 3, 3, 0, 0],
      [4, 4, 4, 0, 0],
      [5, 5, 5, 0, 0],
      [0, 2, 0, 4, 4],
      [0, 0, 0, 5, 5],
-     [0, 1, 0, 2, 2]]
-    # m = [[3, 1, 1],
-    #      [-1, 3, 1]]
-    k = 3
-    # k = 3
-    print(svd(m, k))
+     [0, 1, 0, 2, 2]]'''
+    m = [[3, 1, 1],
+         [-1, 3, 1]]
+    print(svd(m))
     # x = svd (m, 2)
     # print(x[1])
 
