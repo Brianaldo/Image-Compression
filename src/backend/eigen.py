@@ -200,6 +200,18 @@ def normalize (v):
         v[i] /= length
     return v
 
+def isUpperTriangular (m):
+    upper = True
+    i = 0
+    while (i<nbar(m) and upper):
+        j = 0
+        while (j<=i-1 and upper):
+            if (round(m[i][j],3)!=0):
+                upper = False
+            else:
+                j += 1
+        i += 1
+    return upper
 
 def dotProduct (u,v):
 # Mengembalikan hasil perkalian dot antara u dan v
