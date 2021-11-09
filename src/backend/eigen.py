@@ -138,7 +138,7 @@ def isInV (v, x):
     found = False
     i = 0
     while (i<len(v) and not(found)):
-        if (round(v[i],10)==round(x,10)):
+        if (round(v[i],3)==round(x,3)):
             found = True
         else :
             i += 1
@@ -281,7 +281,7 @@ def Q (m):
             mh[i] = UkurangV(mh[i], projection(ma[i], mh[j]))
     for i in range (nbar(mh)):    
         x = magnitude(mh[i])
-        if round(x,10)!=0:
+        if round(x,3)!=0:
             mh[i] = vKaliX(mh[i], 1/x)
     return transpose(mh)
 
@@ -301,9 +301,9 @@ def getEigenValues(matrix):
     
     ada0 = False
     for i in range(length):
-        if (abs(matrix[i][i]) >= 0.001):
+        if (abs(matrix[i][i]) >= 0.00001 and not isInV(retMat, matrix[i][i])):
             retMat = np.append(retMat, matrix[i][i])
-        elif (abs(matrix[i][i]) < 0.001 and not ada0):
+        elif (abs(matrix[i][i]) < 0.00001 and not ada0 and not isInV(retMat, matrix[i][i])):
             retMat = np.append(retMat, 0)
             ada0 = True
     
@@ -406,7 +406,7 @@ def notZero(A, baris, kolom):
     n = nbar(A)
     while (j<=m-1 and not(found)):
         while (i<=n-1 and not(found)):
-            if (round(A[i][j],6)!=0):
+            if (round(A[i][j],3)!=0):
                 found = True
             else:
                 i += 1
@@ -453,7 +453,7 @@ def gauss (A):
     while (bar<=n-1):
         done = False
         while (kol<=m-1 and not(done)):
-            if (round(B[bar][kol], 6)!=0):
+            if (round(B[bar][kol], 3)!=0):
                 B = kaliX(B, bar, 1/B[bar][kol])
                 done = True
             else :
@@ -462,7 +462,7 @@ def gauss (A):
 
     for i in range (0, n):
         for j in range (0, m):
-            if (round(B[i][j], 6)==0):
+            if (round(B[i][j], 3)==0):
                 B[i][j] = 0
 
     return B
@@ -487,9 +487,9 @@ def gaussJordan (A):
         done = False
         tempBar = 0
         while (kol<=m-1 and not(done)):
-            if (round(B[bar][kol], 6)==1):
+            if (round(B[bar][kol], 3)==1):
                 while (tempBar <= n-1):
-                    if (round(B[tempBar][kol], 6)!=0 and tempBar!=bar):
+                    if (round(B[tempBar][kol], 3)!=0 and tempBar!=bar):
                         B = tambahBaris(B, tempBar, bar, (-1*B[tempBar][kol]/B[bar][kol]))
                     tempBar += 1
                 if tempBar == n:
@@ -508,7 +508,7 @@ def isAllZero (A, bar, kol):
     found = False
     i = kol + 1
     while (i<=nkol(A)-1 and not(found)):
-        if (round(A[bar][i], 6)!=0):
+        if (round(A[bar][i], 3)!=0):
             found = True
         else:
             i += 1
@@ -527,6 +527,7 @@ def eigenVector (A, val):
     for i in range (nbar(B)):
         B[i][i] += val
     B = gaussJordan(B)
+    print(B)
     
     i = 0
 
@@ -537,7 +538,7 @@ def eigenVector (A, val):
         done = False
         while (j<=nkol(B)-1 and not(done)):
             
-            if (round(B[i][j],6)==1):
+            if (round(B[i][j],3)==1):
                 if (isAllZero(B, i, j)):
                     for p in range (nkol(B)):
                         em[i][p] = 0
@@ -558,7 +559,7 @@ def eigenVector (A, val):
         j = 0
         done = False
         while (j<=nkol(B)-1 and not(done)):
-            if (round(em[i][j],6)==1 and i!=j):
+            if (round(em[i][j],3)==1 and i!=j):
                 em = tukarBaris(em, i, j)
                 done = True
             else:
@@ -599,12 +600,19 @@ def eigen (A):
     # eigVal = QR(A)
     eigVal = getEigenValues(A)
     eigVal = sorted(eigVal, reverse=True)
+    for i in range(len(eigVal)):
+        eigVal[i] = round(eigVal[i],3)
     eigVector = []
     for i in range (len(eigVal)):
         temp = eigenVector(A, eigVal[i])
         for j in range (len(temp)):
             eigVector.append(temp[j])
     return (eigVal, eigVector)
+
+m = [[3,-2,0], [-2,3,0], [0,0,5]]
+print(eigen(m))
+
+
 
 
 '''
