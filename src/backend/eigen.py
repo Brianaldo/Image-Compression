@@ -654,7 +654,7 @@ def householder (m):
         wwt = wwt * 2
         h = np.subtract(id,wwt)
         temp = np.dot(h, m)
-        m = np.dot(m,h)
+        m = np.dot(temp,h)
     return m
 
 '''
