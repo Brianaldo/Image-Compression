@@ -1,0 +1,35 @@
+.main-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-page--header {
+  width: 100vw;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.main-page--header-title {
+    font-size: 70px;
+}
+
+.main-page--header-container {
+  width: 98vw;
+  border-bottom: solid 1px;
+  border-color: lightgray;
+  padding-bottom: 10px;
+}
+.main-page--header-container > h1 {
+  margin: 0;
+}
+
+@keyframes firstShow {
+    from {opacity: 0%;}
+    to {opacity: 100%;}
+}
