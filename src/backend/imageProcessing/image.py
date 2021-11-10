@@ -24,9 +24,10 @@ def main():
     os.chdir(os.path.join("Algeo02-20112", "src", "backend", "imageProcessing"))
     
     x = imageToThreeArray(r"img.jpg")
-    Image.fromarray(x[0]).save(r"test.jpg")
+    Image.fromarray(threeArrayToOneArray([x[0], x[0], x[0]])).save(r"test.jpg")
     y = np.round_(kompresiSVD(x[0], 100))
-    Image.fromarray(y).save(r"new.jpg")
+    y = y.astype(np.uint8)
+    Image.fromarray(threeArrayToOneArray([y, y, y])).save(r"new.jpg")
 
 if __name__ == "__main__":
     main()
