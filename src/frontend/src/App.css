@@ -1,5 +1,6 @@
 .App {
-  height: 300vh;
-  background: #000;
-  color: #86868b;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  /* color: #86868b; */
 }
