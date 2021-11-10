@@ -25,8 +25,8 @@ def main():
     
     x = imageToThreeArray(r"img.jpg")
     Image.fromarray(x[0]).save(r"test.jpg")
-    y = kompresiSVD(x[0], 100)
-    Image.fromarray(x[0]).save(r"new.jpg")
+    y = np.round_(kompresiSVD(x[0], 100))
+    Image.fromarray(y).save(r"new.jpg")
 
 if __name__ == "__main__":
     main()
