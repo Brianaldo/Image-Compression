@@ -323,19 +323,14 @@ def QR(matrix):
     R = np.zeros((length, length))
     for i in range(length):
         col = matrix1[0:, i]
-        # print(col)
         for j in range(1, i + 1):
-            R[j - 1][i] = np.dot(col, Q[0:, j - 1])
+            # R[j - 1][i] = np.dot(col, Q[0:, j - 1])
             col = col - (np.dot(col, Q[0:, j - 1]) * Q[0:, j - 1])
         magn = np.linalg.norm(col)
-        R[i][i] = magn
-        # print(magn)
-        
-        if (magn == 0):
-            col = 0
-        else:
+        if (magn != 0):
             col = col / magn
         Q[0:, i] = col
+    R = np.dot(np.transpose(Q), matrix)
     return (Q, R)
 
 '''def QR (A):
@@ -529,7 +524,8 @@ def getEigenVector(matrix, eigen):
     np.random.shuffle(v)
     for i in range(15):
         vx = (matrix - np.identity(length) * eigen)
-        if (np.linalg.det(vx) == 0):
+        sign, logdet = np.linalg.slogdet(vx)
+        if (sign == 0 and logdet == -np.Inf):
             vx = (matrix - np.identity(length) * 0.000000001)
         v = np.dot(np.linalg.inv(vx), v)
         magn = np.linalg.norm(v)
