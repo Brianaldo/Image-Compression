@@ -315,23 +315,106 @@ def getEigenValues(matrix):
         retMat = np.append(retMat, matrix[j][j])
     return retMat
 
-def QR(matrix):
-    matrix1 = matrix
-    # matrix1 = hessenberg(matrix)
-    length = len(matrix1)
-    Q = np.empty((length, length))
-    R = np.zeros((length, length))
-    for i in range(length):
-        col = matrix1[0:, i]
-        for j in range(1, i + 1):
-            # R[j - 1][i] = np.dot(col, Q[0:, j - 1])
-            col = col - (np.dot(col, Q[0:, j - 1]) * Q[0:, j - 1])
-        magn = np.linalg.norm(col)
-        if (magn != 0):
-            col = col / magn
-        Q[0:, i] = col
-    R = np.dot(np.transpose(Q), matrix)
-    return (Q, R)
+def min2(x, y):
+    if x < y:
+        return x
+    return y
+
+def getEigenValuesFrom2x2(m):
+    # a = m[0][0]
+    # b = m[0][1]
+    # c = m[1][0]
+    # d = m[1][1]
+    B = (m[0][0] + m[1][1]) * -1
+    C = m[0][0] * m[1][1] - m[0][1] * m[1][0]
+    eig1 = (B * -1 + math.sqrt((B ** 2) - 4 * C)) / 2
+    eig2 = (B * -1 - math.sqrt((B ** 2) - 4 * C)) / 2
+    return [eig1, eig2]
+
+def QR(m):
+    # b_k+1 = m[k][ k -1]
+    # x_k = m[k - 1][ k - 1]
+    n = len(m)
+    if (n == 2):
+        return getEigenValuesFrom2x2(m)
+    else:
+        counter = 0
+        shiftSum = 0
+        eigens = []
+        loop = True
+        while(loop and counter < 20):
+            Q = np.identity(n)
+            k = 1
+            RCBMatrix = m[(n - 2):, (n - 2):]
+            e1, e2 = getEigenValuesFrom2x2(RCBMatrix)
+            if (abs(e1 - m[n - 1][n - 1]) == abs(e2 - m[n - 1][n - 1])):
+                shifter = min2(e1, e2)
+            else:
+                if (abs(e1 - m[n - 1][n - 1]) < abs(e2 - m[n - 1][n - 1])):
+                    shifter = e1
+                else:
+                    shifter = e2
+            shiftSum += shifter
+            m = m - np.identity(n) * shifter
+            s = m[k][k - 1] / math.sqrt((m[k][k - 1] ** 2) + (m[k - 1][k - 1] ** 2))
+            c = m[k - 1][k - 1] / math.sqrt((m[k][k - 1] ** 2) + (m[k - 1][k - 1] ** 2))
+
+            p = np.zeros((n, n))
+            for i in range(k - 1):
+                p[i][i] = 1
+            p[k - 1][k - 1] = c
+            p[k][k] = c
+            p[k][k - 1] = s * -1
+            p[k - 1][k] = s
+            for i in range(k + 1, n):
+                p[i][i] = 1
+            
+            m = np.dot(p, m)
+            Q = np.dot(Q, np.transpose(p))
+            
+            for k in range(2, n):
+                s = m[k][k - 1] / math.sqrt((m[k][k - 1] ** 2) + (m[k - 1][k - 1] ** 2))
+                c = m[k - 1][k - 1] / math.sqrt((m[k][k - 1] ** 2) + (m[k - 1][k - 1] ** 2))
+                p = np.zeros((n, n))
+                for i in range(k - 1):
+                    p[i][i] = 1
+                p[k - 1][k - 1] = c
+                p[k][k] = c
+                p[k][k - 1] = s * -1
+                p[k - 1][k] = s
+                for i in range(k + 1, n):
+                    p[i][i] = 1
+                
+                m = np.dot(p,m)
+                Q = np.dot(Q, np.transpose(p))
+                
+            m = np.dot(m, Q)
+            if (abs(m[n - 1][n - 2]) < 0.001):
+                eigens.append(m[n - 1][n - 1] + shiftSum)
+                ret = QR(m[0:(n - 1), 0:(n - 1)])
+                for el in ret:
+                    eigens.append(el + shiftSum)
+                loop = False
+            counter += 1
+        return eigens
+
+# def QR(matrix):
+#     matrix1 = matrix
+#     # matrix1 = hessenberg(matrix)
+#     length = len(matrix1)
+#     Q = np.empty((length, length))
+#     R = np.zeros((length, length))
+#     for i in range(length):
+#         col = matrix1[0:, i]
+#         for j in range(1, i + 1):
+#             # R[j - 1][i] = np.dot(col, Q[0:, j - 1])
+#             col = col - (np.dot(col, Q[0:, j - 1]) * Q[0:, j - 1])
+#         magn = np.linalg.norm(col)
+#         if (magn != 0):
+#             col = col / magn
+#         Q[0:, i] = col
+#     R = np.dot(np.transpose(Q), matrix)
+#     return (Q, R)
 
 '''def QR (A):
  # Mengembalikan nilai eigen dari matrix m

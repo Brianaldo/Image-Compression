@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from scipy.linalg import hessenberg
+# from scipy.linalg import hessenberg
 
 def nbar (m):
 # Mengembalikan jumlah baris matrix
@@ -666,3 +666,8 @@ tes[0] berisi eigen value terurut mengecil
 tes[1] berisi basis eigen
 
 '''
+m = [[4, 1, -2, 2],
+     [1, 2, 0, 1],
+     [-2, 0, 3, -2],
+     [2, 1, -2, -1]]
+print(householder(np.array(m)))
