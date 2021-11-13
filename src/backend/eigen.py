@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from sympy import *
 # from scipy.linalg import hessenberg
 
 def nbar (m):
@@ -545,10 +546,18 @@ def eigenVector (A, val):
     # done: boolean
     # eV : array
 # Algoritma
-    B = matKaliX(A, -1)
-    for i in range (nbar(B)):
-        B[i][i] += val
-    B = gaussJordan(B)
+
+    A = matKaliX(A, -1)
+    for i in range (nbar(A)):
+        A[i][i] += val
+    C = Matrix(A)
+    C = C.rref()[0]
+    B = copyMatrix(A)
+    k = 0
+    for i in range(nbar(A)):
+        for j in range(nkol(A)):
+            B[i][j] = C[k]
+            k += 1
     
     i = 0
 
@@ -666,8 +675,9 @@ tes[0] berisi eigen value terurut mengecil
 tes[1] berisi basis eigen
 
 '''
-m = [[4, 1, -2, 2],
-     [1, 2, 0, 1],
-     [-2, 0, 3, -2],
-     [2, 1, -2, -1]]
-print(householder(np.array(m)))
+m = [[3,-2,0], [-2,3,0],[0,0,5]]
+m = eigenVector(m,1)
+print(m)
+
+
+
