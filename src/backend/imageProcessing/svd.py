@@ -40,18 +40,18 @@ def getV(MMT, eigenMMT, length):
     return np.transpose(retMat)
 
 
-def svd(matrix):
-# Return rank, U, Sigma, and V Transpose
-    length = len(matrix)
-    length0 = len(matrix[0])
-    matrixT = np.transpose(matrix)
-    lengthT = len(matrixT)
-    MMT = np.dot(matrixT, matrix)
-    eigenMMT = sorted(getEigenValues(MMT), reverse=True)
-    U = getU(matrix, matrixT, length)
-    S = getSigma(eigenMMT, length, length0)
-    VT = np.transpose(getV(MMT, eigenMMT, lengthT))
-    return [U[0], U[1], S, VT]
+# def svd(matrix):
+# # Return rank, U, Sigma, and V Transpose
+#     length = len(matrix)
+#     length0 = len(matrix[0])
+#     matrixT = np.transpose(matrix)
+#     lengthT = len(matrixT)
+#     MMT = np.dot(matrixT, matrix)
+#     eigenMMT = sorted(getEigenValues(MMT), reverse=True)
+#     U = getU(matrix, matrixT, length)
+#     S = getSigma(eigenMMT, length, length0)
+#     VT = np.transpose(getV(MMT, eigenMMT, lengthT))
+#     return [U[0], U[1], S, VT]
 
 def kompresiSVD(matrix, percent):
     rank, U, S, VT = svd(matrix)

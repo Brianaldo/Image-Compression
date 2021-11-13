@@ -21,80 +21,9 @@ def arrayToImg(array):
     img.save(r"new.jpg")
     return
 
-def householder (m):
-    n = len(m)
-    for k in range(n-2):
-        total = 0
-        for i in range(k+1,n):
-            total += (m[i,k])**2
-        total = math.sqrt(total)
-        if m[k+1,k]>=0:
-            total *= -1
-        r = math.sqrt((0.5)*(total)**2 - (0.5)*total*m[k+1,k])
-        w = []
-        for j in range(k+1):
-            w.append(0)
-        w.append((m[k+1,k] - total)/(2*r))
-        for j in range(k+2, n):
-            w.append(m[j,k]/(2*r))
-        w = np.matrix(w)
-        wwt = np.dot(np.transpose(w), w)
-        id = np.identity(n)
-        wwt = wwt * 2
-        h = np.subtract(id,wwt)
-        temp = np.dot(h, m)
-        m = np.dot(temp,h)
-    return m
+ERR_TOL = 10**(-6)
 
-def power_iteration(A, num_simulations: int):
-    # Ideally choose a random vector
-    # To decrease the chance that our vector
-    # Is orthogonal to the eigenvector
-    b_k = np.random.rand(A.shape[1])
-    # b_k = np.array([1, 1])
-    # print('Start')
-    # print(b_k)
-    for _ in range(num_simulations):
-        # calculate the matrix-by-vector product Ab
-        b_k1 = np.dot(A, b_k)
-
-        # calculate the norm
-        b_k1_norm = max(b_k1.min(), b_k1.max(), key=abs)
-
-        # re normalize the vector
-        b_k = b_k1 / b_k1_norm
-        # print(b_k1)
-        # print(b_k1_norm)
-        # print(b_k)
-    return b_k, b_k1_norm
-
-def getU(m):
-    A = np.dot(m, np.transpose(m))
-    # print(A)
-    return power_iteration(A, 1000)
-
-def getV(m):
-    A = np.dot(np.transpose(m), m)
-    # print(A)
-    return power_iteration(A, 1000)
-
-def svda(m):
-    U, e1 = getU(m)
-    V, e2 = getV(m)
-    U = U/np.linalg.norm(U)
-    V = V/np.linalg.norm(V)
-    print(U)
-    print(V)
-    if (e1 < e2):
-        sigma = math.sqrt(e2)
-    else:
-        sigma = math.sqrt(e1)
-    print(sigma)
-    return np.dot(np.dot(np.matrix(U).T, np.matrix(sigma)), np.matrix(V))
-
-ERR_TOL = 10**(-10)
-
-def blockPowerMethod(A):
+def svd(A):
     s = np.linalg.matrix_rank(A)
     n, m = np.shape(A)
     V = np.random.rand(m, s)
@@ -106,32 +35,40 @@ def blockPowerMethod(A):
         V = Q[:,:s]
         sigma = R[:s, :s]
         err = np.linalg.norm(np.dot(A, V) - np.dot(U, sigma))
-        # print(err)
-    return U, np.diag(np.diag(sigma)), V
+    return s, U, np.diag(np.diag(sigma)), V
+
+def kompresiSVD(matrix, percent):
+    rank, U, S, V = svd(matrix)
+    rank = int(round(rank * percent / 100))
+    if (rank <= 0):
+        rank = 0
+
+    return np.dot(np.dot(U[0:, 0:rank], S[0:rank, 0:rank]), np.transpose(V[0:, 0:rank]))
+
+def compress(percent):
+    x = imageToThreeArray(r"img.jpg")
+    R = x[0]
+    G = x[1]
+    B = x[2]
+    NR = kompresiSVD(R, percent)
+    NG = kompresiSVD(G, percent)
+    NB = kompresiSVD(B, percent)
+    arrayToImg( np.uint8( threeArrayToOneArray ([NR, NG, NB]) ) )
+    return
 
 def main():
     os.chdir(os.path.join("Algeo02-20112", "src", "backend", "imageProcessing"))
     
     x = imageToThreeArray(r"img.jpg")
-    U, sigma, V = blockPowerMethod(x[0])
-    y = np.round(np.dot(np.dot(U, sigma), np.transpose(V)))
-    Image.fromarray(np.uint8(y)).save(r"1.jpg")
-    # M, N = np.shape(x[0])
-    # y = np.round(svda(A))
-    # y = np.uint8(y)
-    # print(y)
-    # Image.fromarray(y).save(r"1.jpg")
-    # print(QR(np.array(householder(np.dot(x[0], np.transpose(x[0]))))))
-    # print(getEigensVector(np.dot(x[0], np.transpose(x[0])), QR(np.array(householder(np.dot(x[0], np.transpose(x[0])))))))
-    # print(len(np.dot(np.transpose(x[1]), x[1])))
-    # print(householder(np.array(np.dot(np.transpose(x[1]), x[1]))))
-    # Image.fromarray(threeArrayToOneArray([x[0], x[1], x[2]])).save(r"test.jpg")
-    # print(np.reshape(svd(x[0]).ravel(), (M, N)))
-    # y = np.round_(np.reshape(svd(x[0]).ravel(), (M, N)))
-    # y = np.uint8(y)
-    # Image.fromarray(y).save(r"1.jpg")
-    # Image.fromarray(threeArrayToOneArray([x[0], x[0], x[0]])).save(r"new.jpg")
-    # Image.fromarray(threeArrayToOneArray([y, y, y])).save(r"new.jpg")
+    UR, sigmaR, VR = svd(x[0])
+    UG, sigmaG, VG = svd(x[1])
+    UB, sigmaB, VB = svd(x[2])
+
+    rank = 70
+    R = np.dot(np.dot(UR[0:, 0:rank], sigmaR[0:rank, 0:rank]), np.transpose(VR[0:, 0:rank]))
+    G = np.dot(np.dot(UG[0:, 0:rank], sigmaG[0:rank, 0:rank]), np.transpose(VG[0:, 0:rank]))
+    B = np.dot(np.dot(UB[0:, 0:rank], sigmaB[0:rank, 0:rank]), np.transpose(VB[0:, 0:rank]))
+    Image.fromarray(np.uint8(threeArrayToOneArray([R, G, B]))).save(r"1.jpg")
 
 if __name__ == "__main__":
     main()
