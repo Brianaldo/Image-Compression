@@ -36,7 +36,7 @@ def svd(A, percent):
         V = Q[:,:s]
         sigma = R[:s, :s]
         err = np.linalg.norm(np.dot(A, V) - np.dot(U, sigma))
-        err = err / (s - rank)
+        err = err / (s - rank + 1)
         i += 1
     print(i)
     return rank, U, sigma, V
