@@ -223,6 +223,10 @@
   animation: borealisBar 2s linear infinite;
 }
 
+.runtime {
+  margin-bottom: -10px;
+}
+
 @keyframes borealisBar {
   0% {
     left: 0%;

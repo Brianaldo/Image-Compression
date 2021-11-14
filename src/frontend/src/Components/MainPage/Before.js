@@ -7,14 +7,22 @@ import "./Before.css";
 
 const Before = () => {
   const [images, setImages] = React.useState([]);
+  const [compressedImg, setCompressedImg] = React.useState();
   const [removeButtonState, setRemoveButtonState] = React.useState(true);
   const [isConverting, setIsConverting] = React.useState(false);
+  const [isImgFetched, setIsImgFetched] = React.useState(false);
   const [rate, setRate] = React.useState(50);
+  const [rt, setRt] = React.useState();
   const maxNumber = 1;
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
+    setRate(50)
     console.log(imageList, addUpdateIndex);
     setImages(imageList);
+    setRt()
+    if (imageList.length === 0) {
+      setIsImgFetched(false);
+    }
   };
   const rangeHandler = (event) => {
     setRate(event.target.value);
@@ -26,29 +34,46 @@ const Before = () => {
     link.download = filename;
     link.click();
   }
-  
+
   const downloadHandler = () => {
-    download(images[0].data_url, "test.jpg")
-  }
+    download(compressedImg, "Compressed.jpg");
+  };
 
   const fetchImage = () => {
-    console.log("test")
-    console.log(images)
-    fetch('http://127.0.0.1:5000/', {
-      method: 'POST',
+    setIsConverting(true);
+    console.log("test");
+    console.log(images);
+    fetch("http://127.0.0.1:5000/", {
+      method: "POST",
       headers: {
         Accept: "application/json",
-        'Content-Type': "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(images[0].data_url)
+      body: JSON.stringify({ data: images[0].data_url, percent: rate }),
     })
-    .then((res) => res.json())
-    .then((res) => console.log(res))
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        console.log(base64toimg(res.Response));
+        setCompressedImg(base64toimg(res.Response));
+        setIsConverting(false);
+        setIsImgFetched(true);
+        setRt(Math.round(res.time * 1000) / 1000);
+      });
 
     // fetch('http://127.0.0.1:5000/')
     // .then((res) => res.json())
     // .then((resp) => {console.log("halo")})
-  }
+  };
+
+  const base64toimg = (string) => {
+    string = string.slice(2, string.length - 1);
+    return `data:image/jpeg;base64,${string}`;
+  };
+
+  const showResult = () => {
+    return isImgFetched && !isConverting;
+  };
 
   return (
     <div className="before">
@@ -131,42 +156,51 @@ const Before = () => {
         </div>
       ) : (
         <div className="before__setting">
-          <h2>Compression Rate: {rate.toString()}%</h2>
-          <input
-            type="range"
-            className="slider"
-            onChange={rangeHandler}
-            disabled={isConverting ? "disabled" : ""}
-          ></input>
-          <button
-            className="button-default"
-            onClick={() => {
-              setIsConverting(true);
-              fetchImage();
-            }}
-            disabled={isConverting ? "disabled" : ""}
-            style={isConverting ? { opacity: "0%" } : { opacity: "100%" }}
-          >
-            Convert
-          </button>
+          {isImgFetched ? null : <h2>Compression Rate: {rate.toString()}%</h2>}
+          {isImgFetched ? null : (
+            <input
+              type="range"
+              min="1"
+              max="100"
+              className="slider"
+              onChange={rangeHandler}
+              disabled={isConverting ? "disabled" : ""}
+            ></input>
+          )}
+          {isImgFetched ? null : (
+            <button
+              className="button-default"
+              onClick={() => {
+                setIsConverting(true);
+                fetchImage();
+              }}
+              disabled={isConverting ? "disabled" : ""}
+              style={isConverting ? { opacity: "0%" } : { opacity: "100%" }}
+            >
+              Convert
+            </button>
+          )}
           {isConverting ? (
             <div class="loader">
               <div class="loaderBar"></div>
             </div>
           ) : null}
-          <div className="before__download-page">
-            <div className="before__download-container">
-              <div className="image-container">
-                <div className="img-container">
-                  <img src={trash} alt="" />
+          {isImgFetched ? (
+            <div className="before__download-page">
+              <div className="before__download-container">
+                <div className="image-container">
+                  <div className="img-container">
+                    <img src={compressedImg} alt="" />
+                  </div>
                 </div>
               </div>
+              <h4 className="runtime">runtime: {rt} s</h4>
+              &nbsp;
+              <button className="download-button" onClick={downloadHandler}>
+                Download
+              </button>
             </div>
-            &nbsp;
-            <button className="download-button" onClick={downloadHandler}>
-              Download
-            </button>
-          </div>
+          ) : null}
         </div>
       )}
     </div>
