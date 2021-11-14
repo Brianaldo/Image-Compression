@@ -1,2 +1,0 @@
-
-print("Matrix : {} ".format(M))

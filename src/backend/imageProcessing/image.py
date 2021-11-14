@@ -1,8 +1,6 @@
 import numpy as np
 from PIL import Image
 import os
-import math
-from svd import *
 
 def imageToThreeArray(img_data):
     img = Image.open(img_data)
