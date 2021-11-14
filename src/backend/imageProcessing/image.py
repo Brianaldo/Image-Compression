@@ -19,28 +19,31 @@ def arrayToImg(array):
     img.save(r"new.jpg")
     return
 
-ERR_TOL = 10**(-6)
+ERR_TOL = 0.999999
+MAX_LOOP = 100
 
-def svd(A):
+def svd(A, percent):
     s = np.linalg.matrix_rank(A)
+    rank = int(round(s * int(percent) / 100))
     n, m = np.shape(A)
     V = np.random.rand(m, s)
     err = 1 # inisialisasi error
-    while (err > ERR_TOL):
+    i = 0  
+    while (err > ERR_TOL and i < MAX_LOOP):
         Q, R = np.linalg.qr(np.dot(A, V))
         U = Q[:,:s]
         Q, R = np.linalg.qr(np.dot(np.transpose(A), U))
         V = Q[:,:s]
         sigma = R[:s, :s]
         err = np.linalg.norm(np.dot(A, V) - np.dot(U, sigma))
-    return s, U, np.diag(np.diag(sigma)), V
+        err = err / (s - rank)
+        i += 1
+    print(i)
+    return rank, U, sigma, V
 
 def kompresiSVD(matrix, percent):
-    rank, U, S, V = svd(matrix)
-    rank = int(round(rank * percent / 100))
-    if (rank <= 0):
-        rank = 0
-
+    rank, U, S, V = svd(matrix, percent)
+    print("svd done")
     return np.dot(np.dot(U[0:, 0:rank], S[0:rank, 0:rank]), np.transpose(V[0:, 0:rank]))
 
 def compress(img_data, percent):
@@ -65,11 +68,11 @@ def main():
     os.chdir(os.path.join("Algeo02-20112", "src", "backend", "imageProcessing"))
     
     x = imageToThreeArray(r"img.jpg")
-    UR, sigmaR, VR = svd(x[0])
-    UG, sigmaG, VG = svd(x[1])
-    UB, sigmaB, VB = svd(x[2])
+    rank, UR, sigmaR, VR = svd(x[0], 80)
+    rank, UG, sigmaG, VG = svd(x[1], 80)
+    rank, UB, sigmaB, VB = svd(x[2], 80)
 
-    rank = 70
+    # rank = 70
     R = np.dot(np.dot(UR[0:, 0:rank], sigmaR[0:rank, 0:rank]), np.transpose(VR[0:, 0:rank]))
     G = np.dot(np.dot(UG[0:, 0:rank], sigmaG[0:rank, 0:rank]), np.transpose(VG[0:, 0:rank]))
     B = np.dot(np.dot(UB[0:, 0:rank], sigmaB[0:rank, 0:rank]), np.transpose(VB[0:, 0:rank]))
