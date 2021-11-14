@@ -60,7 +60,7 @@ def compress(img_data, percent):
     NG = kompresiSVD(G, percent)
     print("yes")
     NB = kompresiSVD(B, percent)
-    print("yes")
+    print("done")
     return np.uint8( threeArrayToOneArray ([NR, NG, NB]) )
 
 def main():

@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import sys
 import os
-from io import BytesIO, StringIO
+from io import BytesIO
 import base64
 import re
 from image import *
@@ -15,15 +15,15 @@ CORS(app)
 
 @app.route('/', methods = ['POST', 'GET'])
 def index():
-    # print(request.get_json())
     data = request.get_json()
     image_data = re.sub('^data:image/.+;base64,', '', data)
     compressed_image_array = compress(BytesIO(base64.b64decode(image_data)), 50)
-    compressed_string = base64.encode(Image.fromarray(compressed_image_array))
-    # im.save("coba.jpg")
-    print(compressed_string)
-    # image = Image.open(StringIO.StringIO(image_data))
-    return {"Response": "hello"}
+    compressed_img = Image.fromarray(compressed_image_array)
+    buffered = BytesIO()
+    compressed_img.save(buffered, format = "JPEG")
+    img_byte = buffered.getvalue()
+    compressed_string = base64.b64encode(img_byte)
+    return {"Response": compressed_string}
 
 
 if __name__ == "__main__":
