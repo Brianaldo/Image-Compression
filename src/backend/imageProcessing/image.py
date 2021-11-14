@@ -4,8 +4,8 @@ import os
 import math
 from svd import *
 
-def imageToThreeArray(address):
-    img = Image.open(address)
+def imageToThreeArray(img_data):
+    img = Image.open(img_data)
     arr = np.array(img)
     return [arr[0:, 0:, 0], arr[0:, 0:, 1], arr[0:, 0:, 2]]
 
@@ -45,16 +45,23 @@ def kompresiSVD(matrix, percent):
 
     return np.dot(np.dot(U[0:, 0:rank], S[0:rank, 0:rank]), np.transpose(V[0:, 0:rank]))
 
-def compress(percent):
-    x = imageToThreeArray(r"img.jpg")
+def compress(img_data, percent):
+    print("yes")
+    x = imageToThreeArray(img_data)
+    print("yes")
     R = x[0]
+    print("yes")
     G = x[1]
+    print("yes")
     B = x[2]
+    print("yes")
     NR = kompresiSVD(R, percent)
+    print("yes")
     NG = kompresiSVD(G, percent)
+    print("yes")
     NB = kompresiSVD(B, percent)
-    arrayToImg( np.uint8( threeArrayToOneArray ([NR, NG, NB]) ) )
-    return
+    print("yes")
+    return np.uint8( threeArrayToOneArray ([NR, NG, NB]) )
 
 def main():
     os.chdir(os.path.join("Algeo02-20112", "src", "backend", "imageProcessing"))

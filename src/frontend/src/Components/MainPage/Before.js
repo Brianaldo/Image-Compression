@@ -31,6 +31,25 @@ const Before = () => {
     download(images[0].data_url, "test.jpg")
   }
 
+  const fetchImage = () => {
+    console.log("test")
+    console.log(images)
+    fetch('http://127.0.0.1:5000/', {
+      method: 'POST',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': "application/json"
+      },
+      body: JSON.stringify(images[0].data_url)
+    })
+    .then((res) => res.json())
+    .then((res) => console.log("halo"))
+
+    // fetch('http://127.0.0.1:5000/')
+    // .then((res) => res.json())
+    // .then((resp) => {console.log("halo")})
+  }
+
   return (
     <div className="before">
       <div className="before__image-uploading">
@@ -123,6 +142,7 @@ const Before = () => {
             className="button-default"
             onClick={() => {
               setIsConverting(true);
+              fetchImage();
             }}
             disabled={isConverting ? "disabled" : ""}
             style={isConverting ? { opacity: "0%" } : { opacity: "100%" }}
@@ -134,7 +154,7 @@ const Before = () => {
               <div class="loaderBar"></div>
             </div>
           ) : null}
-          {/* <div className="before__download-page">
+          <div className="before__download-page">
             <div className="before__download-container">
               <div className="image-container">
                 <div className="img-container">
@@ -146,7 +166,7 @@ const Before = () => {
             <button className="download-button" onClick={downloadHandler}>
               Download
             </button>
-          </div> */}
+          </div>
         </div>
       )}
     </div>
