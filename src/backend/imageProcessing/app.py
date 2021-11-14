@@ -23,7 +23,7 @@ def index():
     compressed_img.save(buffered, format = "JPEG")
     img_byte = buffered.getvalue()
     compressed_string = base64.b64encode(img_byte)
-    return {"Response": compressed_string}
+    return {"Response": str(compressed_string)}
 
 
 if __name__ == "__main__":

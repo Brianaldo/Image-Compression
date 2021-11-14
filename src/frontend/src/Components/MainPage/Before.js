@@ -43,7 +43,7 @@ const Before = () => {
       body: JSON.stringify(images[0].data_url)
     })
     .then((res) => res.json())
-    .then((res) => console.log("halo"))
+    .then((res) => console.log(res))
 
     // fetch('http://127.0.0.1:5000/')
     // .then((res) => res.json())
