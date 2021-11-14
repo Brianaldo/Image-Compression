@@ -19,7 +19,7 @@
   align-items: center;
   flex-direction: column;
   animation: firstShow 1s;
-  /* transition: opacity 1s; */
+  transition: opacity 1s;
 }
 
 .before__upload-page {
