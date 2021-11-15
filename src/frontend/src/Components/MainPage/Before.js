@@ -13,13 +13,14 @@ const Before = () => {
   const [isImgFetched, setIsImgFetched] = React.useState(false);
   const [rate, setRate] = React.useState(50);
   const [rt, setRt] = React.useState();
+  const [ext, setExt] = React.useState();
   const maxNumber = 1;
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    setRate(50)
+    setRate(50);
     console.log(imageList, addUpdateIndex);
     setImages(imageList);
-    setRt()
+    setRt();
     if (imageList.length === 0) {
       setIsImgFetched(false);
     }
@@ -36,7 +37,19 @@ const Before = () => {
   }
 
   const downloadHandler = () => {
-    download(compressedImg, "Compressed.jpg");
+    // if (compressedImg.includes("data:image/jpeg;base64")) {
+    //   console.log("jpg")
+    // } else if (compressedImg.includes("data:image/png;base64")) {
+    //   console.log("png")
+    // }
+    // console.log(compressedImg)
+    // let mimeType = compressedImg.profilepic.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
+    // console.log(mimeType)
+    if (ext == ".png") {
+      download(compressedImg, "Compressed.png");
+    } else {
+      download(compressedImg, "Compressed.jpg");
+    }
   };
 
   const fetchImage = () => {
@@ -53,8 +66,10 @@ const Before = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        console.log(base64toimg(res.Response));
+        // console.log(res);
+        // console.log(base64toimg(res.Response));
+        console.log(res.ext)
+        setExt(res.ext);
         setCompressedImg(base64toimg(res.Response));
         setIsConverting(false);
         setIsImgFetched(true);
@@ -69,10 +84,6 @@ const Before = () => {
   const base64toimg = (string) => {
     string = string.slice(2, string.length - 1);
     return `data:image/jpeg;base64,${string}`;
-  };
-
-  const showResult = () => {
-    return isImgFetched && !isConverting;
   };
 
   return (
