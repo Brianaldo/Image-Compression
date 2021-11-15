@@ -7,11 +7,24 @@ def imageToThreeArray(img_data):
     arr = np.array(img)
     return [arr[0:, 0:, 0], arr[0:, 0:, 1], arr[0:, 0:, 2]]
 
+def imageToFourArray(img_data):
+    img = Image.open(img_data).convert("RGBA")
+    arr = np.array(img)
+    return [arr[0:, 0:, 0], arr[0:, 0:, 1], arr[0:, 0:, 2], arr[0:, 0:, 3]]
+
 def threeArrayToOneArray(array):
     newArr = np.zeros((len(array[0]), len(array[0][0]), 3), dtype=np.uint8)
     newArr[0:, 0:, 0] = array[0]
     newArr[0:, 0:, 1] = array[1]
     newArr[0:, 0:, 2] = array[2]
+    return newArr
+
+def fourArrayToOneArray(array):
+    newArr = np.zeros((len(array[0]), len(array[0][0]), 4), dtype=np.uint8)
+    newArr[0:, 0:, 0] = array[0]
+    newArr[0:, 0:, 1] = array[1]
+    newArr[0:, 0:, 2] = array[2]
+    newArr[0:, 0:, 3] = array[3]
     return newArr
 
 def arrayToImg(array):
@@ -25,6 +38,8 @@ MAX_LOOP = 100
 def svd(A, percent):
     s = np.linalg.matrix_rank(A)
     rank = int(round(s * int(percent) / 100))
+    if (rank < 1):
+        rank = 1
     n, m = np.shape(A)
     V = np.random.rand(m, s)
     err = 1 # inisialisasi error
@@ -46,7 +61,7 @@ def kompresiSVD(matrix, percent):
     print("svd done")
     return np.dot(np.dot(U[0:, 0:rank], S[0:rank, 0:rank]), np.transpose(V[0:, 0:rank]))
 
-def compress(img_data, percent):
+def compressThree(img_data, percent):
     print("yes")
     x = imageToThreeArray(img_data)
     print("yes")
@@ -63,6 +78,26 @@ def compress(img_data, percent):
     NB = kompresiSVD(B, percent)
     print("done")
     return np.uint8( threeArrayToOneArray ([NR, NG, NB]) )
+
+def compressFour(img_data, percent):
+    print("yes")
+    x = imageToFourArray(img_data)
+    print("yes")
+    R = x[0]
+    print("yes")
+    G = x[1]
+    print("yes")
+    B = x[2]
+    print("yes")
+    A = x[3]
+    NR = kompresiSVD(R, percent)
+    print("yes")
+    NG = kompresiSVD(G, percent)
+    print("yes")
+    NB = kompresiSVD(B, percent)
+    print("done")
+    NA = kompresiSVD(A, percent)
+    return np.uint8( fourArrayToOneArray ([NR, NG, NB, NA]) )
 
 def main():
     os.chdir(os.path.join("Algeo02-20112", "src", "backend", "imageProcessing"))
