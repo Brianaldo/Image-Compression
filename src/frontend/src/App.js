@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import "./App.css";
-import ImageCanvas from "./Components/ImageCanvas/ImageCanvas";
-import LandingPage from "./Components/LandingPage/LandingPage";
+// import ImageCanvas from "./Components/ImageCanvas/ImageCanvas";
+// import LandingPage from "./Components/LandingPage/LandingPage";
 import MainPage from "./Components/MainPage/MainPage";
 
 function App() {
