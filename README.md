@@ -18,7 +18,7 @@ Tugas Besar 2 IF 2123 Aljabar Linier dan Geometri Aplikasi Nilai Eigen dan Vekto
 ## Instalasi Flask
 1. Pada terminal, lakukan cd ke folder imageProcessing dalam folder backend
 2. Lakukan instalasi flask pada terminal
-    - MacOS<br />\
+    - MacOS<br />
         ```
         python3 -m venv venv
         . venv/bin/activate
