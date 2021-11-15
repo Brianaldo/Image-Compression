@@ -1,6 +1,8 @@
 # Algeo02-20112
 Tugas Besar 2 IF 2123 Aljabar Linier dan Geometri Aplikasi Nilai Eigen dan Vektor Eigen dalam Kompresi Gambar  Semester I Tahun 2021/2022
 
+> **_NOTE:_**  Branch ini dibuat untuk kebutuhan pengumpulan karena file pengumpulan harus dibawah 10 MB.
+
 # Directories
 
     .
@@ -16,24 +18,40 @@ Tugas Besar 2 IF 2123 Aljabar Linier dan Geometri Aplikasi Nilai Eigen dan Vekto
 ## Instalasi Flask
 1. Pada terminal, lakukan cd ke folder imageProcessing dalam folder backend
 2. Lakukan instalasi flask pada terminal
-    - MacOS<br />
-        ```python3 -m venv venv```<br />
-        ```. venv/bin/activate```<br />
-        ```pip install Flask```<br />
+    - MacOS<br />\
+        ```
+        python3 -m venv venv
+        . venv/bin/activate
+        pip install Flask
+        ```
     - Window<br />
-        ```py -3 -m venv venv```<br />
-        ```venv\Scripts\activate```<br />
-        ```pip install Flask```<br />
-3. `pip install -r requirements.txt`
-4. `flask run`
+        ```
+        py -3 -m venv venv
+        venv\Scripts\activate
+        pip install Flask
+        ```
+3. Install Requirements
+    ```
+    pip install -r requirements.txt
+    ```
+4. Run Flask
+    ```
+    flask run
+    ```
 
 ## Instalasi React.JS
 1. Pada terminal, lakukan cd ke folder frontend
-2. ```npm install```
-3. ```npm start```
+2. Install Package
+    ```
+    npm install
+    ```
+3. Run React.JS
+    ```
+    npm start
+    ```
 
 ## Run
-1. Access ```http://localhost:3000/```
+1. Access `http://localhost:3000/`
 2. Upload foto yang akan dikompresi dan atur convertion rate
 3. Setelah menunggu beberapa saat, hasil kompresi akan muncul
 4. Tekan tombol download untuk mendownload hasil

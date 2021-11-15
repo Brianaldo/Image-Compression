@@ -30,21 +30,21 @@ function App() {
 
   return (
     <div className="App">
-      <div
+      {/* <div
         class="scroll-downs"
         style={isFixed ? { opacity: "100%" } : { opacity: "0%" }}
       >
         <div class="mousey">
           <div class="scroller"></div>
         </div>
-      </div>
-      <LandingPage />
+      </div> */}
+      {/* <LandingPage />
       <ImageCanvas
         scrollHeight={10000}
         width={1920}
         height={1080}
         numFrames={775}
-      />
+      /> */}
       <MainPage />
     </div>
   );
